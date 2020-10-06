@@ -14,7 +14,7 @@ import(
 var ctx = context.Background();
 
 // Perform below functions on all running containers
-func Perform(params...string) {
+func Perform(params...string) error {
 	cli, err := client.NewClientWithOpts(client.FromEnv, client.WithAPIVersionNegotiation())	
 	if err != nil {
 		panic(err)
@@ -45,13 +45,14 @@ func Perform(params...string) {
 			CreateContainer(container.Image, container.Ports[1].IP, port)
 		}
 	}
+	return nil
 }
 
 
 
 
 // KillContainer kills all exisiting contianer to later add the health checks
-func KillContainer(containerID string) string{
+func KillContainer(containerID string) error{
 	cli, err := client.NewClientWithOpts(client.FromEnv, client.WithAPIVersionNegotiation())	
 	if err != nil {
 		panic(err)
@@ -60,10 +61,10 @@ func KillContainer(containerID string) string{
 	if errs != nil {
 		panic(errs)
 	}
-	return "Killed Container"
+	return nil
 }
 // CreateContainer adds health check to existing contianer and restarts it
-func CreateContainer(contianerImage string, hostIP string, port string) string {
+func CreateContainer(contianerImage string, hostIP string, port string) error {
 	cli, err := client.NewClientWithOpts(client.FromEnv, client.WithAPIVersionNegotiation())	
 	if err != nil {
 		panic(err)
@@ -100,5 +101,5 @@ func CreateContainer(contianerImage string, hostIP string, port string) string {
 	if err := cli.ContainerStart(ctx, resp.ID, types.ContainerStartOptions{}); err != nil {
 		panic(err)
 	}
-	return "Success"
+	return nil
 }
