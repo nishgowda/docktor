@@ -1,4 +1,4 @@
-package docktor
+package lib 
 
 import (
 	"testing"

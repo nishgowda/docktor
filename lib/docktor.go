@@ -1,37 +1,57 @@
-package docktor
+package lib 
 
 
 import(
 	"context"
-	"fmt"
 	"github.com/docker/docker/api/types"
 	"github.com/docker/docker/client"
 	"github.com/docker/docker/api/types/container"
 	"github.com/docker/go-connections/nat"
+	"github.com/docker/docker/api/types/filters"
 	"strconv"
 )
 
 var ctx = context.Background();
 
-// GetContainers performs below functions on all running containers
-func GetContainers() {
+// Perform below functions on all running containers
+func Perform(params...string) {
 	cli, err := client.NewClientWithOpts(client.FromEnv, client.WithAPIVersionNegotiation())	
 	if err != nil {
 		panic(err)
 	}
-
-	containers, err := cli.ContainerList(ctx, types.ContainerListOptions{})
-	if err != nil {
-		panic(err)
-	}
-	for _, container := range containers {
-		port := strconv.FormatUint(uint64(container.Ports[1].PublicPort), 10)
-		KillContainer(container.ID[:10])
-		CreateContainer(container.Image, container.Ports[1].IP, port)
+	var filter filters.Args
+	var containers []types.Container
+	
+	if (params != nil) {
+		filter = filters.NewArgs()
+		filter.Add("ID", params[0])
+		containers, err = cli.ContainerList(ctx, types.ContainerListOptions{Filters:filter})
+		if err != nil {
+			panic(err)
+		}
+		for _, container := range containers {
+			port := strconv.FormatUint(uint64(container.Ports[1].PublicPort), 10)
+			KillContainer(container.ID[:10])
+			CreateContainer(container.Image, container.Ports[1].IP, port)
+		}
+	}else{
+		containers, err = cli.ContainerList(ctx, types.ContainerListOptions{})
+		if err != nil {
+			panic(err)
+		}
+		for _, container := range containers {
+			port := strconv.FormatUint(uint64(container.Ports[1].PublicPort), 10)
+			KillContainer(container.ID[:10])
+			CreateContainer(container.Image, container.Ports[1].IP, port)
+		}
 	}
 }
+
+
+
+
 // KillContainer kills all exisiting contianer to later add the health checks
-func KillContainer(containerID string) {
+func KillContainer(containerID string) string{
 	cli, err := client.NewClientWithOpts(client.FromEnv, client.WithAPIVersionNegotiation())	
 	if err != nil {
 		panic(err)
@@ -40,7 +60,7 @@ func KillContainer(containerID string) {
 	if errs != nil {
 		panic(errs)
 	}
-	fmt.Println("Killed container")
+	return "Killed Container"
 }
 // CreateContainer adds health check to existing contianer and restarts it
 func CreateContainer(contianerImage string, hostIP string, port string) string {
