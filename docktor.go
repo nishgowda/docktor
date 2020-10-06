@@ -26,12 +26,12 @@ func GetContainers() {
 	}
 	for _, container := range containers {
 		port := strconv.FormatUint(uint64(container.Ports[1].PublicPort), 10)
-		killContainer(container.ID[:10])
-		createContainer(container.Image, container.Ports[1].IP, port)
+		KillContainer(container.ID[:10])
+		CreateContainer(container.Image, container.Ports[1].IP, port)
 	}
 }
-
-func killContainer(containerID string) {
+// KillContainer kills all exisiting contianer to later add the health checks
+func KillContainer(containerID string) {
 	cli, err := client.NewClientWithOpts(client.FromEnv, client.WithAPIVersionNegotiation())	
 	if err != nil {
 		panic(err)
@@ -42,8 +42,8 @@ func killContainer(containerID string) {
 	}
 	fmt.Println("Killed container")
 }
-
-func createContainer(contianerImage string, hostIP string, port string) {
+// CreateContainer adds health check to existing contianer and restarts it
+func CreateContainer(contianerImage string, hostIP string, port string) string {
 	cli, err := client.NewClientWithOpts(client.FromEnv, client.WithAPIVersionNegotiation())	
 	if err != nil {
 		panic(err)
@@ -80,5 +80,5 @@ func createContainer(contianerImage string, hostIP string, port string) {
 	if err := cli.ContainerStart(ctx, resp.ID, types.ContainerStartOptions{}); err != nil {
 		panic(err)
 	}
-	fmt.Printf("Succesfully added health check to container %s\n", resp.ID)
+	return "Success"
 }
