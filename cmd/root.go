@@ -25,17 +25,18 @@ func init() {
 	cobra.OnInitialize(initConfig)
 
 	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.cobra.yaml)")
-	rootCmd.PersistentFlags().StringP("author", "a", "YOUR NAME", "author name for copyright attribution")
-	rootCmd.PersistentFlags().StringVarP(&userLicense, "license", "l", "", "name of license for the project")
+	rootCmd.PersistentFlags().StringP("author", "a", "Nish Gowda", "Nish Gowda")
+	rootCmd.PersistentFlags().StringVarP(&userLicense, "license", "l", "", "MIT")
 	rootCmd.PersistentFlags().Bool("viper", true, "use Viper for configuration")
 	viper.BindPFlag("author", rootCmd.PersistentFlags().Lookup("author"))
 	viper.BindPFlag("useViper", rootCmd.PersistentFlags().Lookup("viper"))
 	viper.SetDefault("author", "Nish Gowda nish.gowda6@gmail.com")
 	viper.SetDefault("license", "MIT")
 
-	rootCmd.AddCommand(runCmd)
 
-	runCmd.Flags().StringVar(&container, "c", "", "specify container id")
+	rootCmd.AddCommand(healCmd)
+	attachCmd.Flags().StringVar(&container, "c", "", "specify container id")
+	healCmd.Flags().StringVar(&container, "c", "", "Specify id of container")
 }
 
 func initConfig() {

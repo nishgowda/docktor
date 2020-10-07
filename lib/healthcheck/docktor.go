@@ -1,4 +1,5 @@
-package lib 
+package healthcheck
+ 
 
 
 import(
@@ -13,8 +14,8 @@ import(
 
 var ctx = context.Background();
 
-// Perform below functions on all running containers
-func Perform(params...string) error {
+// PerformHealthCheck below functions on all running containers
+func PerformHealthCheck(params...string) error {
 	cli, err := client.NewClientWithOpts(client.FromEnv, client.WithAPIVersionNegotiation())	
 	if err != nil {
 		panic(err)
@@ -40,9 +41,10 @@ func Perform(params...string) error {
 			panic(err)
 		}
 		for _, container := range containers {
-			port := strconv.FormatUint(uint64(container.Ports[1].PublicPort), 10)
+			//fmt.Println(container.Ports[0].PublicPort)
+			port := strconv.FormatUint(uint64(container.Ports[0].PublicPort), 10)
 			KillContainer(container.ID[:10])
-			CreateContainer(container.Image, container.Ports[1].IP, port)
+			CreateContainer(container.Image, container.Ports[0].IP, port)
 		}
 	}
 	return nil
@@ -83,7 +85,7 @@ func CreateContainer(contianerImage string, hostIP string, port string) error {
 		resp, err := cli.ContainerCreate(ctx, &container.Config{
 		Image: contianerImage,
 		Healthcheck: &container.HealthConfig {
-			Test : []string{"CMD-SHELL", "curl localhost:3000"},
+			Test : []string{"CMD-SHELL", "curl localhost:" + port},
 			Interval : 1000000000,
 			Retries : 10,
 			Timeout : 10000000000,
