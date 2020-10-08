@@ -9,13 +9,9 @@ services:
 before_install:
     - docker run -p 80:80 -d nginx
 
-jobs:
-    include:
-        - stage: "Tests"
-          name: "Unit Tests"
-          script:
-            - "make test" 
-        - stage: "Build"
-          name: "Builds"
-          script:
-            - "make build"
+scripts:
+    - make test
+
+deploy:
+    on:
+        branch: master
