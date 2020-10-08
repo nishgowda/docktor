@@ -4,8 +4,8 @@ import (
 	"testing"
 )
 func TestHeal(t *testing.T) {
-	var containerIds = []string{"bdeb2a9b9bde"}
-	result := ContainerHeal(containerIds)
+	containers := GetUnheatlhyContainers()
+	result := ContainerHeal(containers)
 	if (result != nil ){
 		t.Errorf("Error in healing contiainer %s", result)
 	}else{
