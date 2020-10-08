@@ -2,7 +2,8 @@ package healthcheck
  
 
 
-import(
+import (
+
 	"context"
 	"github.com/docker/docker/api/types"
 	"github.com/docker/docker/client"
@@ -103,5 +104,6 @@ func CreateContainer(contianerImage string, hostIP string, port string) error {
 	if err := cli.ContainerStart(ctx, resp.ID, types.ContainerStartOptions{}); err != nil {
 		panic(err)
 	}
+
 	return nil
 }

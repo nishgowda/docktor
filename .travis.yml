@@ -7,7 +7,13 @@ services:
     - docker
 
 before_install:
-    - docker run -p 80:80 -d nginx
+    - docker run -p 80:80 -d -name ng nginx
 
 scripts:
     - make test
+    
+deploy:
+    provider: script
+    scripts: make build
+    on:
+        branch: master

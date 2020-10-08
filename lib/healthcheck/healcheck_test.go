@@ -4,7 +4,7 @@ import (
 	"testing"
 )
 
-func TestContainer(t *testing.T) {
+func TestPerform(t *testing.T) {
 	result := PerformHealthCheck()
 	if (result != nil) {
 		t.Errorf("Error in creating health check: %s", result)
@@ -12,3 +12,4 @@ func TestContainer(t *testing.T) {
 		t.Logf("Succesfully created new container")
 	}
 }
+
