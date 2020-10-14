@@ -12,8 +12,4 @@ before_install:
 scripts:
     - make test
     
-deploy:
-    provider: script
-    scripts: make build
-    on:
-        branch: master
+

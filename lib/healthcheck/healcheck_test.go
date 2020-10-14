@@ -5,7 +5,8 @@ import (
 )
 
 func TestPerform(t *testing.T) {
-	result := PerformHealthCheck()
+	var dummy = []string{"bdd7731b8121"}
+	result := PerformHealthCheck(dummy)
 	if (result != nil) {
 		t.Errorf("Error in creating health check: %s", result)
 	}else {

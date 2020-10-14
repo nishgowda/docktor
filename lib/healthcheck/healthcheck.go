@@ -5,6 +5,7 @@ package healthcheck
 import (
 
 	"context"
+	"log"
 	"github.com/docker/docker/api/types"
 	"github.com/docker/docker/client"
 	"github.com/docker/docker/api/types/container"
@@ -16,7 +17,7 @@ import (
 var ctx = context.Background();
 
 // PerformHealthCheck below functions on all running containers
-func PerformHealthCheck(params...string) error {
+func PerformHealthCheck(params []string) error {
 	cli, err := client.NewClientWithOpts(client.FromEnv, client.WithAPIVersionNegotiation())	
 	if err != nil {
 		panic(err)
@@ -24,22 +25,26 @@ func PerformHealthCheck(params...string) error {
 	var filter filters.Args
 	var containers []types.Container
 	
-	if (params != nil) {
+	if (len(params) > 1) {
 		filter = filters.NewArgs()
+		log.Println(params)
 		filter.Add("ID", params[0])
 		containers, err = cli.ContainerList(ctx, types.ContainerListOptions{Filters:filter})
 		if err != nil {
-			panic(err)
+			panic(err)	
 		}
 		for _, container := range containers {
 			port := strconv.FormatUint(uint64(container.Ports[1].PublicPort), 10)
 			KillContainer(container.ID[:10])
 			CreateContainer(container.Image, container.Ports[1].IP, port)
 		}
-	}else{
+	} else {
 		containers, err = cli.ContainerList(ctx, types.ContainerListOptions{})
 		if err != nil {
 			panic(err)
+		}
+		if len(containers) < 1 {
+			log.Fatal("No running containers detected\n")
 		}
 		for _, container := range containers {
 			//fmt.Println(container.Ports[0].PublicPort)

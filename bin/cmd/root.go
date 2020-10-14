@@ -10,7 +10,7 @@ import (
 var (
 	cfgFile string
 	userLicense	string
-	container string
+	containers []string
 	rootCmd = &cobra.Command{
 	Use: "docktor",
 	Short: "A health check generator for docker containers",
@@ -32,12 +32,10 @@ func init() {
 	viper.BindPFlag("useViper", rootCmd.PersistentFlags().Lookup("viper"))
 	viper.SetDefault("author", "Nish Gowda nish.gowda6@gmail.com")
 	viper.SetDefault("license", "MIT")
-
-
-	rootCmd.AddCommand(healCmd)
-	rootCmd.AddCommand(autoHealCmd)
-	attachCmd.Flags().StringVar(&container, "c", "", "specify container id")
-	healCmd.Flags().StringVar(&container, "c", "", "Specify id of container")	
+	var dummy = []string{""}
+	attachCmd.Flags().StringSliceVar(&containers, "c", dummy , "Specify container ids")	
+	healCmd.Flags().StringSliceVar(&containers, "c", dummy , "Specify container ids")	
+	autoHealCmd.Flags().StringSliceVar(&containers, "c", dummy , "Specify container ids")	
 }
 
 func initConfig() {
