@@ -34,19 +34,26 @@ func GetUnheatlhyContainers(params...string) []string {
 
 // ContainerHeal heals unhealthy containers
 func ContainerHeal(containerIds []string) error {
+	if (len(containerIds) < 2) {
+		for _, id := range GetUnheatlhyContainers() {
+			containerIds = append(containerIds, id)
+		}
+	}
 	cli, err := client.NewClientWithOpts(client.FromEnv, client.WithAPIVersionNegotiation())	
 	if err != nil {
-		panic(err)
+		return err
 	}	
 	var timeout *time.Duration
 	for _, id := range containerIds {
-		timeoutValue := time.Duration(10) * time.Second
-		timeout = &timeoutValue
-		e := cli.ContainerRestart(ctx, id, timeout)
-		if e != nil {
-			return e
+		if (len(id) > 2) {
+			timeoutValue := time.Duration(10) * time.Second
+			timeout = &timeoutValue
+			e := cli.ContainerRestart(ctx, id, timeout)
+			if e != nil {
+				return e
+			}
+			fmt.Println("Restarted container: ", id)
 		}
-		fmt.Println("Restarted container: ", id)
 	}
 	return nil
 }
