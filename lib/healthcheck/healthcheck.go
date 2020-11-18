@@ -44,14 +44,17 @@ func PerformHealthCheck(params []string) error {
 			panic(err)
 		}
 		if len(containers) < 1 {
-			log.Fatal("No running containers detected\n")
+			log.Print("No running containers detected\n")
+			return nil
 		}
 		for _, container := range containers {
 			//fmt.Println(container.Ports[0].PublicPort)
 			port := strconv.FormatUint(uint64(container.Ports[0].PublicPort), 10)
 			KillContainer(container.ID[:10])
 			CreateContainer(container.Image, container.Ports[0].IP, port)
+			log.Printf("Succesfully added health checks to the following container: %s\n", container.Image)
 		}
+
 	}
 	return nil
 }

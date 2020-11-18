@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"log"
 	"github.com/spf13/cobra"
 	"github.com/nishgowda/docktor/lib/heal"
 
@@ -12,14 +13,18 @@ func init() {
 var healCmd = &cobra.Command{
 	Use: "heal",
 	Short: "Heals unhealthy containers",
-	
 	Run: func(cmd *cobra.Command, args []string) {
-			if len(containers) < 1 {
-				c := heal.GetUnheatlhyContainers()
-				heal.ContainerHeal(c)
-			} else {
-				c := heal.GetUnheatlhyContainers(containers[0])
-				heal.ContainerHeal(c)
+		if (containers == nil) {
+			c := heal.GetUnheatlhyContainers()
+			result:= heal.ContainerHeal(c)
+			if (result != nil) {
+				log.Fatal("There was an error in healing your container\n")
 			}
+		} else {
+			result:= heal.ContainerHeal(containers)
+			if (result != nil) {
+				log.Fatal("There was an error in healing your container\n")
+			}
+		}
 	},
 }

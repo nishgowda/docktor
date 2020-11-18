@@ -7,7 +7,6 @@ import (
 	"os/exec"
 )
 
-
 var ctx = context.Background()
 
 // AutoHeal wraps auto update on containers
@@ -16,6 +15,7 @@ func AutoHeal(params []string) error {
     arg0 := "update"
     arg1 := "--restart"
 	arg2 := "unless-stopped"
+
 	if len(params) < 1 {
 		log.Fatal("No container specified\n")
 	}
@@ -26,6 +26,7 @@ func AutoHeal(params []string) error {
 		if err != nil {
 			return err
 		}
+		log.Printf("Succesfully added autoheals to container: %s\n", id);
 	}
 	return nil
  }
