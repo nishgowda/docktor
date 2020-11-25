@@ -11,6 +11,7 @@ import (
 	"github.com/docker/go-connections/nat"
 	"github.com/docker/docker/api/types/filters"
 	"strconv"
+	"errors"
 )
 
 var ctx = context.Background();
@@ -30,7 +31,7 @@ func PerformHealthCheck(params []string) error {
 		filter.Add("ID", params[0])
 		containers, err = cli.ContainerList(ctx, types.ContainerListOptions{Filters:filter})
 		if err != nil {
-			panic(err)	
+			return err
 		}
 		for _, container := range containers {
 			port := strconv.FormatUint(uint64(container.Ports[1].PublicPort), 10)
@@ -43,8 +44,7 @@ func PerformHealthCheck(params []string) error {
 			panic(err)
 		}
 		if len(containers) < 1 {
-			log.Print("No running containers detected\n")
-			return nil
+			return errors.New("No running containers detected")
 		}
 		for _, container := range containers {
 			port := strconv.FormatUint(uint64(container.Ports[0].PublicPort), 10)
@@ -82,7 +82,7 @@ func CreateContainer(contianerImage string, hostIP string, port string) error {
 	}
 	containerPort, err := nat.NewPort("tcp", port)
 	if err != nil {
-		panic("Unable to get the port")
+		return errors.New("Unable to get the port of container")
 	}
 
 	portBinding := nat.PortMap{containerPort: []nat.PortBinding{hostBinding}}
@@ -102,10 +102,10 @@ func CreateContainer(contianerImage string, hostIP string, port string) error {
 			PortBindings: portBinding, 
 		},nil, nil,"")
 	if err != nil {
-		panic(err)
+		return err
 	}
 	if err := cli.ContainerStart(ctx, resp.ID, types.ContainerStartOptions{}); err != nil {
-		panic(err)
+		return err
 	}
 	return nil
 }

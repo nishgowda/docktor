@@ -6,6 +6,7 @@ import (
 	"os"
 	"runtime"
 	"strings"
+	"errors"
 )
 
 // ReadImage reads a docker file and ouptuts its contents
@@ -19,33 +20,63 @@ func ReadImage(imagePath string) error {
 	
 	image = strings.ToLower(image)
 	if strings.Compare(image, "dockerfile") != 0 {
-		fmt.Println("File given was not a dockerfile")
-		os.Exit(1)
+		return errors.New("File given was not a dockerfile")
 	}
 	file, err := os.Open(imagePath)
 	if err != nil {
-		return err
+		return errors.Unwrap(err)
 	}
 	defer file.Close()
 
 	var data DockerVars
+	var e ErrorMessages
 	lineNumber := 0
 	scanner := bufio.NewScanner(file)
 	for scanner.Scan() {
 		lineNumber ++
 		suggestImprovements(scanner.Text(), &data, lineNumber)
 	}
-	if data.userCount == 0 {
-		fmt.Println("No user specified in Dockerfile, this is a security risk for your container, consider adding one")
-	} else if data.environCount == 0 {
-		fmt.Println("No environment variable specified in Dockerfile, consider adding one as it helps secure your repository and is considered a best practice")
-	} else if data.environCount == 0 {
-		fmt.Println("No working direcotry specified, consider adding one as")
+	if data.userCount == 0 || data.environCount == 0 || data.workDirCount == 0 {
+		createMessages(true, &data, &e)
+		displayMessages(&e)
 	}
 	if err := scanner.Err(); err != nil {
-		return err
+		return errors.Unwrap(err)
 	}
 	return nil
+}
+
+func createMessages(err bool, data *DockerVars, e *ErrorMessages) error {
+	if err {
+		if data.userCount == 0 {
+			e.userMsg = "No user specified in Dockerfile, this is a security risk for your container, consider adding one"
+		} 
+		if data.environCount == 0 {
+			e.environMsg = "No environment variable specified in Dockerfile, consider adding one as it helps secure your repository and is considered a best practice"
+		}  
+		if data.workDirCount == 0 {
+			e.workDirMsg = "No working directory specified, consider adding one"
+		}
+		return nil
+	} 
+	return errors.New("No errors detected")
+}
+
+func displayMessages(e *ErrorMessages) {
+	fmt.Println("<---- Detected the following issues with your Dockerfile ---->")
+	i := 0
+	if len(e.userMsg) != 0 {
+		i++
+		fmt.Printf("%d.) %s \n", i, e.userMsg)
+	}
+	if len(e.environMsg) != 0 {
+		i++
+		fmt.Printf("%d.) %s \n", i, e.environMsg)
+	}
+	if len(e.workDirMsg) != 0 {
+		i++
+		fmt.Printf("%d.) %s \n", i, e.workDirMsg)
+	}
 }
 
 func suggestImprovements(text string, data *DockerVars, lineNumber int) {

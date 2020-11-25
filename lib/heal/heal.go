@@ -7,6 +7,7 @@ import (
 	"github.com/docker/docker/client"
 	"log"
 	"time"
+	"errors"
 )
 
 var ctx = context.Background()
@@ -41,6 +42,9 @@ func ContainerHeal(containerIds []string) error {
 		for _, id := range GetUnheatlhyContainers() {
 			containerIds = append(containerIds, id)
 		}
+	}
+	if (len(containerIds) == 0) {
+		return errors.New("No containers were running")
 	}
 	cli, err := client.NewClientWithOpts(client.FromEnv, client.WithAPIVersionNegotiation())	
 	if err != nil {

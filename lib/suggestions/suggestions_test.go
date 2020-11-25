@@ -5,7 +5,7 @@ import (
 )
 
 func TestSuggestions(t *testing.T) {
-	 filePath := "../../Dockerfile"
+	 filePath := "../../testdata/Dockerfile"
 	 result := ReadImage(filePath)
 	 if (result != nil) {
 		 t.Errorf("Error in reading Dockerfile : %s\n", result)

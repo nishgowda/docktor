@@ -2,8 +2,8 @@ package autoheal
 
 import (
 	"log"
-	"fmt"
 	"os/exec"
+	"errors"
 )
 
 
@@ -15,10 +15,9 @@ func AutoHeal(params []string) error {
 	arg2 := "unless-stopped"
 
 	if len(params) < 1 {
-		log.Fatal("No container specified\n")
+		return errors.New("No container specified")
 	}
 	for _, id := range params {
-		fmt.Println(id)
 		cmd := exec.Command(app, arg0, arg1, arg2, id)
 		err := cmd.Run()
 		if err != nil {
