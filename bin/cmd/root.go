@@ -11,9 +11,10 @@ var (
 	cfgFile string
 	userLicense	string
 	containers []string
+	file string
 	rootCmd = &cobra.Command{
 	Use: "docktor",
-	Short: "A health check generator for docker containers",
+	Short: "A doctor for Docker contianers",
 }
 )
 // Execute rootCmd
@@ -25,7 +26,7 @@ func init() {
 	cobra.OnInitialize(initConfig)
 
 	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.cobra.yaml)")
-	rootCmd.PersistentFlags().StringP("author", "a", "Nish Gowda", "Nish Gowda")
+	rootCmd.PersistentFlags().StringP("author", "a", "Nish Gowda", "")
 	rootCmd.PersistentFlags().StringVarP(&userLicense, "license", "l", "", "MIT")
 	rootCmd.PersistentFlags().Bool("viper", true, "use Viper for configuration")
 	viper.BindPFlag("author", rootCmd.PersistentFlags().Lookup("author"))
@@ -33,9 +34,10 @@ func init() {
 	viper.SetDefault("author", "Nish Gowda nish.gowda6@gmail.com")
 	viper.SetDefault("license", "MIT")
 	var dummy = []string{""}
-	attachCmd.Flags().StringSliceVar(&containers, "c", dummy , "Specify container ids")	
+	healthCheckCmd.Flags().StringSliceVar(&containers, "c", dummy , "Specify container ids")	
 	healCmd.Flags().StringSliceVar(&containers, "c", dummy , "Specify container ids")	
 	autoHealCmd.Flags().StringSliceVar(&containers, "c", dummy , "Specify container ids")	
+	suggestCmd.Flags().StringVarP(&file, "file", "f", "", "Specify a docker file")
 }
 
 func initConfig() {

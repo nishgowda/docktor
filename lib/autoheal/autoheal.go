@@ -3,11 +3,9 @@ package autoheal
 import (
 	"log"
 	"fmt"
-	"context"
 	"os/exec"
 )
 
-var ctx = context.Background()
 
 // AutoHeal wraps auto update on containers
 func AutoHeal(params []string) error {

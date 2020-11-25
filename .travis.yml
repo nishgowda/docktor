@@ -3,6 +3,8 @@ langauge: go
 go:
     - 1.15
 
+os: linux
+
 services:
     - docker
 
@@ -10,6 +12,6 @@ before_install:
     - docker run -p 80:80 -d --name ng nginx
 
 scripts:
-    - make test
+    - make test-all
     
 

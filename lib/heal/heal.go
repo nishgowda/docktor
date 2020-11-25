@@ -1,10 +1,11 @@
 package heal
 
 import (
+	"os"
 	"context"
 	"github.com/docker/docker/api/types"
 	"github.com/docker/docker/client"
-	"fmt"
+	"log"
 	"time"
 )
 
@@ -14,14 +15,16 @@ var ctx = context.Background()
 func GetUnheatlhyContainers(params...string) []string {
 	cli, err := client.NewClientWithOpts(client.FromEnv, client.WithAPIVersionNegotiation())	
 	if err != nil {
-		panic(err)
+		log.Fatal(err)
+		os.Exit(1)
 	}
 	var containerIDs = []string{}
 	var containers []types.Container
 	if (params == nil) {
 		containers, err = cli.ContainerList(ctx, types.ContainerListOptions{})
 		if err != nil {
-			panic(err)
+			log.Fatal(err)
+			os.Exit(1)
 		}
 		for _, container := range containers {
 			containerIDs = append(containerIDs, container.ID[:10])
@@ -52,7 +55,7 @@ func ContainerHeal(containerIds []string) error {
 			if e != nil {
 				return e
 			}
-			fmt.Println("Restarted container: ", id)
+			log.Printf("Restarted container: %s\n", id)
 		}
 	}
 	return nil

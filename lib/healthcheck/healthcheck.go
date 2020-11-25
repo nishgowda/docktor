@@ -3,7 +3,6 @@ package healthcheck
 
 
 import (
-
 	"context"
 	"log"
 	"github.com/docker/docker/api/types"
@@ -16,7 +15,7 @@ import (
 
 var ctx = context.Background();
 
-// PerformHealthCheck below functions on all running containers
+// PerformHealthCheck adds health checks to running containers
 func PerformHealthCheck(params []string) error {
 	cli, err := client.NewClientWithOpts(client.FromEnv, client.WithAPIVersionNegotiation())	
 	if err != nil {
@@ -48,19 +47,14 @@ func PerformHealthCheck(params []string) error {
 			return nil
 		}
 		for _, container := range containers {
-			//fmt.Println(container.Ports[0].PublicPort)
 			port := strconv.FormatUint(uint64(container.Ports[0].PublicPort), 10)
 			KillContainer(container.ID[:10])
 			CreateContainer(container.Image, container.Ports[0].IP, port)
 			log.Printf("Succesfully added health checks to the following container: %s\n", container.Image)
 		}
-
 	}
 	return nil
 }
-
-
-
 
 // KillContainer kills all exisiting contianer to later add the health checks
 func KillContainer(containerID string) error{
@@ -74,7 +68,8 @@ func KillContainer(containerID string) error{
 	}
 	return nil
 }
-// CreateContainer adds health check to existing contianer and restarts it
+
+// CreateContainer recreates a contianer with a health check added to it
 func CreateContainer(contianerImage string, hostIP string, port string) error {
 	cli, err := client.NewClientWithOpts(client.FromEnv, client.WithAPIVersionNegotiation())	
 	if err != nil {
@@ -112,6 +107,5 @@ func CreateContainer(contianerImage string, hostIP string, port string) error {
 	if err := cli.ContainerStart(ctx, resp.ID, types.ContainerStartOptions{}); err != nil {
 		panic(err)
 	}
-
 	return nil
 }
