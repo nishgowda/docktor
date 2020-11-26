@@ -3,6 +3,7 @@ GO_PATH = github.com/nishgowda/docktor/lib
 # tests and builds executable
 all: test-all build
 
+# builds executabke in bin directory
 build:
 	go build -o bin/docktor bin/main.go
 

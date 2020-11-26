@@ -11,6 +11,9 @@ import (
 
 // ReadImage reads a docker file and ouptuts its contents
 func ReadImage(imagePath string) error {
+	if len(imagePath) < 10 {
+		return errors.New("File is not a dockerfile")
+	}
 	image := imagePath[(len(imagePath) - 10): len(imagePath)]
 	if runtime.GOOS == "windows" {
 		image = strings.TrimRight(image, "\r\n")
@@ -39,6 +42,8 @@ func ReadImage(imagePath string) error {
 	if data.userCount == 0 || data.environCount == 0 || data.workDirCount == 0 {
 		createMessages(true, &data, &e)
 		displayMessages(&e)
+	} else {
+		fmt.Println("Detected no issues with you Docker container")
 	}
 	if err := scanner.Err(); err != nil {
 		return errors.Unwrap(err)

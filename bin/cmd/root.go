@@ -11,10 +11,11 @@ var (
 	cfgFile string
 	userLicense	string
 	containers []string
+	image string
 	file string
 	rootCmd = &cobra.Command{
 	Use: "docktor",
-	Short: "A doctor for Docker contianers",
+	Short: "A doctor for Docker containers",
 }
 )
 // Execute rootCmd
@@ -37,13 +38,13 @@ func init() {
 	healthCheckCmd.Flags().StringSliceVar(&containers, "c", dummy , "Specify container ids")	
 	healCmd.Flags().StringSliceVar(&containers, "c", dummy , "Specify container ids")	
 	autoHealCmd.Flags().StringSliceVar(&containers, "c", dummy , "Specify container ids")	
-	suggestCmd.Flags().StringVarP(&file, "file", "f", "", "Specify a docker file")
+	suggestCmd.Flags().StringVar(&file, "f", "", "Specify a Docker file")
 }
 
 func initConfig() {
 	if cfgFile != "" {
 		viper.SetConfigFile(cfgFile)
-	}else {
+	} else {
 		home, err := homedir.Dir()
 		if err != nil {
 			panic(err)
