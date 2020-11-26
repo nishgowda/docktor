@@ -26,14 +26,15 @@ However you can also install binary from this git repo:
 go get github.com/nishgowda/docktor/bin/docktor
 ```
 ## Running docktor
-#### Commands
+ Commands
  - healthcheck
  - heal
  - autoheal
  - suggest
- #### Flags
+
+ Flags
   - specify container ids --c
-  - specify docker files -f
+  - specify docker files --f
 
 
 ## Contributing

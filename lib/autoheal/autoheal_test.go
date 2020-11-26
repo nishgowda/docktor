@@ -6,8 +6,8 @@ import (
 
 func TestAutoHeal(t *testing.T) {
 	containerName := []string{"ng"}
-	result := AutoHeal(containerName)
-	if (result != nil) {
+	err := AutoHeal(containerName)
+	if (err != nil) {
 		t.Errorf("Unsuccesful auto reload")
 	}else {
 		t.Logf("Succesfully autohealed")

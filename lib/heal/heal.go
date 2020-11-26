@@ -1,3 +1,5 @@
+// Package heal "heals" unhealthy docker containers by restarting them
+// in the daemon
 package heal
 
 import (
@@ -12,7 +14,7 @@ import (
 
 var ctx = context.Background()
 
-// GetUnheatlhyContainers fetches the ids of the unhealthy containers
+// GetUnheatlhyContainers fetches the ids of the unhealthy containers currently running
 func GetUnheatlhyContainers(params...string) []string {
 	cli, err := client.NewClientWithOpts(client.FromEnv, client.WithAPIVersionNegotiation())	
 	if err != nil {
@@ -36,7 +38,8 @@ func GetUnheatlhyContainers(params...string) []string {
 	return containerIDs
 }
 
-// ContainerHeal heals unhealthy containers
+// ContainerHeal heals unhealthy containers by restarting them given splice of 
+// container ids grom GetUnheatlhyContainers or from given ids passed in flag
 func ContainerHeal(containerIds []string) error {
 	if (len(containerIds) < 2) {
 		for _, id := range GetUnheatlhyContainers() {

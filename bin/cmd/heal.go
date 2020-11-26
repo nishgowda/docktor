@@ -12,11 +12,11 @@ func init() {
 
 var healCmd = &cobra.Command{
 	Use: "heal",
-	Short: "Heals unhealthy containers",
+	Short: "Heal unhealthy containers",
 	Run: func(cmd *cobra.Command, args []string) {
-		result := heal.ContainerHeal(containers)
-		if (result != nil) {
-			log.Fatal("There was an error in healing your container\n")
+		err := heal.ContainerHeal(containers)
+		if (err != nil) {
+			log.Fatal(err)
 		}
 	},
 }

@@ -1,3 +1,5 @@
+// Package autoheal provides wrapping on docker containers that restarts
+// containers automatically when they become uhealthy
 package autoheal
 
 import (
@@ -7,7 +9,7 @@ import (
 )
 
 
-// AutoHeal wraps auto update on containers
+// AutoHeal wraps auto restarts to containers when they become unhealthy
 func AutoHeal(params []string) error {
 	app := "docker"
     arg0 := "update"

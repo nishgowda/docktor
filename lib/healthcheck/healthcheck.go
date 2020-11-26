@@ -1,7 +1,7 @@
+// Package healthcheck provides primitives that allow users to attach
+// health checks to running docker containers
 package healthcheck
  
-
-
 import (
 	"context"
 	"log"
@@ -24,8 +24,10 @@ func PerformHealthCheck(params []string) error {
 	}
 	var filter filters.Args
 	var containers []types.Container
-	
+
+	// checks two cases -- passed in container ids or none
 	if (len(params) > 1) {
+		// given the parameter
 		filter = filters.NewArgs()
 		log.Println(params)
 		filter.Add("ID", params[0])
@@ -39,9 +41,10 @@ func PerformHealthCheck(params []string) error {
 			CreateContainer(container.Image, container.Ports[1].IP, port)
 		}
 	} else {
+		// find the containers running through Docker API
 		containers, err = cli.ContainerList(ctx, types.ContainerListOptions{})
 		if err != nil {
-			panic(err)
+			return err
 		}
 		if len(containers) < 1 {
 			return errors.New("No running containers detected")
@@ -60,11 +63,11 @@ func PerformHealthCheck(params []string) error {
 func KillContainer(containerID string) error{
 	cli, err := client.NewClientWithOpts(client.FromEnv, client.WithAPIVersionNegotiation())	
 	if err != nil {
-		panic(err)
+		return err
 	}
-	errs := cli.ContainerKill(ctx, containerID, "SIGKILL");
-	if errs != nil {
-		panic(errs)
+	err = cli.ContainerKill(ctx, containerID, "SIGKILL");
+	if err != nil {
+		return err
 	}
 	return nil
 }
@@ -73,7 +76,7 @@ func KillContainer(containerID string) error{
 func CreateContainer(contianerImage string, hostIP string, port string) error {
 	cli, err := client.NewClientWithOpts(client.FromEnv, client.WithAPIVersionNegotiation())	
 	if err != nil {
-		panic(err)
+		return err
 	}
 
 	hostBinding := nat.PortBinding{
@@ -82,9 +85,9 @@ func CreateContainer(contianerImage string, hostIP string, port string) error {
 	}
 	containerPort, err := nat.NewPort("tcp", port)
 	if err != nil {
-		return errors.New("Unable to get the port of container")
+		return err
 	}
-
+	// Provide the features ensuring the container can get a health check
 	portBinding := nat.PortMap{containerPort: []nat.PortBinding{hostBinding}}
 		resp, err := cli.ContainerCreate(ctx, &container.Config{
 		Image: contianerImage,
@@ -101,9 +104,11 @@ func CreateContainer(contianerImage string, hostIP string, port string) error {
 		}, &container.HostConfig{
 			PortBindings: portBinding, 
 		},nil, nil,"")
+
 	if err != nil {
 		return err
 	}
+	// respin the container
 	if err := cli.ContainerStart(ctx, resp.ID, types.ContainerStartOptions{}); err != nil {
 		return err
 	}
