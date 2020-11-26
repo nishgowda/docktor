@@ -39,6 +39,8 @@ func init() {
 	healCmd.Flags().StringSliceVar(&containers, "c", dummy , "Specify container ids")	
 	autoHealCmd.Flags().StringSliceVar(&containers, "c", dummy , "Specify container ids")	
 	suggestCmd.Flags().StringVar(&file, "f", "", "Specify a Docker file")
+	scanCmd.Flags().StringVar(&image, "i", "", "Specify docker image")
+	scanCmd.Flags().StringVar(&file, "f", "", "Specify file to output vulnerability report")
 }
 
 func initConfig() {

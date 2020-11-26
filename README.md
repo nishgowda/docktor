@@ -9,6 +9,7 @@ Some highlights of docktor:
  - Implements automated healing for any unhealthy docker containers running
  - Adds manual healing as well
  - Suggests security to improvements in a given Dockerfile
+ - Scans Docker images for vulnerabilites and generate reports to files
 
 ## Installation
 ```
@@ -31,10 +32,12 @@ go get github.com/nishgowda/docktor/bin/docktor
  - heal
  - autoheal
  - suggest
-
+ - scan
  Flags
   - specify container ids --c
   - specify docker files --f
+  - specify docker images --i
+  - specify file to write report to --f
 
 
 ## Contributing

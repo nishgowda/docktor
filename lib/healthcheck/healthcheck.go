@@ -14,7 +14,7 @@ import (
 	"errors"
 )
 
-var ctx = context.Background();
+var ctx = context.Background()
 
 // PerformHealthCheck adds health checks to running containers
 func PerformHealthCheck(params []string) error {
