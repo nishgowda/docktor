@@ -1,9 +1,9 @@
 package cmd
 
 import (
-	"github.com/spf13/cobra"
-	"github.com/nishgowda/docktor/lib/scan"
 	"fmt"
+	"github.com/nishgowda/docktor/lib/scan"
+	"github.com/spf13/cobra"
 )
 
 func init() {
@@ -11,7 +11,7 @@ func init() {
 }
 
 var scanCmd = &cobra.Command{
-	Use: "scan",
+	Use:   "scan",
 	Short: "Scan images for vulnerabilities",
 	Run: func(cmd *cobra.Command, args []string) {
 		out := scan.Vulnerabilities(image)

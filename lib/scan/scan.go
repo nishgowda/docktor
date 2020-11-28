@@ -3,11 +3,11 @@ package scan
 
 import (
 	"bufio"
-	"os/exec"
-	"log"
-	"fmt"
-	"os"
 	"errors"
+	"fmt"
+	"log"
+	"os"
+	"os/exec"
 )
 
 // Vulnerabilities scans images for vulnerabilities
@@ -21,7 +21,7 @@ func Vulnerabilities(image string) string {
 	cmd := exec.Command(app, arg, image)
 	output, err := cmd.CombinedOutput()
 	if err != nil {
-		return ""
+		return string(output)
 	}
 	return string(output)
 }
@@ -39,6 +39,6 @@ func WriteFile(text string, filename string) error {
 	w := bufio.NewWriter(f)
 	fmt.Fprintf(w, text)
 	w.Flush()
-	fmt.Printf("Succesfully wrote vulnerability report to %s\n", filename)
+	fmt.Printf("Successfully wrote vulnerability report to %s\n", filename)
 	return nil
 }

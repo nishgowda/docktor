@@ -4,6 +4,6 @@ import (
 	"github.com/nishgowda/docktor/bin/cmd"
 )
 
-func main(){
+func main() {
 	cmd.Execute()
 }

@@ -1,19 +1,17 @@
 package cmd
 
-
 import (
-	"github.com/spf13/cobra"
 	"github.com/nishgowda/docktor/lib/healthcheck"
+	"github.com/spf13/cobra"
 	"log"
 )
-
 
 func init() {
 	rootCmd.AddCommand(healthCheckCmd)
 }
 
 var healthCheckCmd = &cobra.Command{
-	Use: "healthcheck",
+	Use:   "healthcheck",
 	Short: "Attach health checks on containers",
 	Run: func(cmd *cobra.Command, args []string) {
 		err := healthcheck.PerformHealthCheck(containers)

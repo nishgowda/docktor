@@ -1,9 +1,8 @@
 package cmd
 
-
 import (
-	"github.com/spf13/cobra"
 	"github.com/nishgowda/docktor/lib/autoheal"
+	"github.com/spf13/cobra"
 	"log"
 )
 
@@ -12,7 +11,7 @@ func init() {
 }
 
 var autoHealCmd = &cobra.Command{
-	Use: "autoheal",
+	Use:   "autoheal",
 	Short: "Add automatic healing to containers",
 	Run: func(cmd *cobra.Command, args []string) {
 		err := autoheal.AutoHeal(containers)

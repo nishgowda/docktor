@@ -1,0 +1,11 @@
+mode: set
+github.com/nishgowda/docktor/lib/scan/scan.go:14.43,17.20 3 1
+github.com/nishgowda/docktor/lib/scan/scan.go:21.2,23.16 3 1
+github.com/nishgowda/docktor/lib/scan/scan.go:26.2,26.23 1 0
+github.com/nishgowda/docktor/lib/scan/scan.go:17.20,20.3 2 0
+github.com/nishgowda/docktor/lib/scan/scan.go:23.16,25.3 1 1
+github.com/nishgowda/docktor/lib/scan/scan.go:30.52,31.40 1 0
+github.com/nishgowda/docktor/lib/scan/scan.go:34.2,35.16 2 0
+github.com/nishgowda/docktor/lib/scan/scan.go:38.2,43.12 6 0
+github.com/nishgowda/docktor/lib/scan/scan.go:31.40,33.3 1 0
+github.com/nishgowda/docktor/lib/scan/scan.go:35.16,37.3 1 0

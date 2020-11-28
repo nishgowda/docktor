@@ -3,17 +3,16 @@
 package autoheal
 
 import (
+	"errors"
 	"log"
 	"os/exec"
-	"errors"
 )
-
 
 // AutoHeal wraps auto restarts to containers when they become unhealthy
 func AutoHeal(params []string) error {
 	app := "docker"
-    arg0 := "update"
-    arg1 := "--restart"
+	arg0 := "update"
+	arg1 := "--restart"
 	arg2 := "unless-stopped"
 
 	if len(params) < 1 {
@@ -25,7 +24,7 @@ func AutoHeal(params []string) error {
 		if err != nil {
 			return err
 		}
-		log.Printf("Succesfully added autoheals to container: %s\n", id);
+		log.Printf("Successfully added autoheals to container: %s\n", id)
 	}
 	return nil
- }
+}

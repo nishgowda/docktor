@@ -11,6 +11,9 @@ build:
 test-all: test_healthcheck test_healthcheck test_heal test_suggestions \
 			test_scan
 
+test-coverage: 
+	- ./cov.sh
+
 test_healthcheck:
 	- go test $(GO_PATH)/healthcheck
 
@@ -25,5 +28,8 @@ test_suggestions:
 
 test_scan:
 	- go test $(GO_PATH)/scan
+
+clean: 
+	rm -f bin/docktor
 
 

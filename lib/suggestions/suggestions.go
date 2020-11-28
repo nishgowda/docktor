@@ -4,11 +4,11 @@ package suggestions
 
 import (
 	"bufio"
+	"errors"
 	"fmt"
 	"os"
 	"runtime"
 	"strings"
-	"errors"
 )
 
 // ReadImage reads a docker file and suggests improvements that can be made
@@ -17,7 +17,7 @@ func ReadImage(imagePath string) error {
 		return errors.New("File is not a dockerfile")
 	}
 	// grab the last 10 characters of the filename
-	image := imagePath[(len(imagePath) - 10): len(imagePath)]
+	image := imagePath[(len(imagePath) - 10):]
 	if runtime.GOOS == "windows" {
 		image = strings.TrimRight(image, "\r\n")
 	} else {
@@ -49,7 +49,7 @@ func ReadImage(imagePath string) error {
 		createMessages(true, &data, &e)
 		displayMessages(&e)
 	} else {
-		fmt.Println("Detected no issues with you Docker container")
+		fmt.Println("Detected no issues with Docker container")
 	}
 	if err := scanner.Err(); err != nil {
 		return err
@@ -61,15 +61,15 @@ func createMessages(err bool, data *DockerVars, e *ErrorMessages) error {
 	if err {
 		if data.userCount == 0 {
 			e.userMsg = "No user specified in Dockerfile, this is a security risk for your container, consider adding one"
-		} 
+		}
 		if data.environCount == 0 {
 			e.environMsg = "No environment variable specified in Dockerfile, these are useful for signaling your application is in production."
-		}  
+		}
 		if data.workDirCount == 0 {
 			e.workDirMsg = "No working directory specified, consider adding one"
 		}
 		return nil
-	} 
+	}
 	return errors.New("No errors detected")
 }
 
@@ -95,7 +95,7 @@ func suggestImprovements(text string, data *DockerVars, lineNumber int) {
 	words := strings.Fields(text)
 	for _, word := range words {
 		if fromCount > 0 && !strings.Contains(word, ":") {
-			fmt.Printf("Line %d -- Specifiy a version of this base image: %s\n", lineNumber, word)
+			fmt.Printf("Line %d -- Specify a version of this base image: %s\n", lineNumber, word)
 		}
 		if strings.ToLower(word) == "from" {
 			fromCount++
@@ -110,4 +110,3 @@ func suggestImprovements(text string, data *DockerVars, lineNumber int) {
 		}
 	}
 }
-
