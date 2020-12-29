@@ -37,8 +37,8 @@ func PerformHealthCheck(params []string) error {
 		}
 		for _, container := range containers {
 			port := strconv.FormatUint(uint64(container.Ports[1].PublicPort), 10)
-			KillContainer(container.ID[:10])
-			CreateContainer(container.Image, container.Ports[1].IP, port)
+			killContainer(container.ID[:10])
+			createContainer(container.Image, container.Ports[1].IP, port)
 		}
 	} else {
 		// find the containers running through Docker API
@@ -51,8 +51,8 @@ func PerformHealthCheck(params []string) error {
 		}
 		for _, container := range containers {
 			port := strconv.FormatUint(uint64(container.Ports[0].PublicPort), 10)
-			KillContainer(container.ID[:10])
-			CreateContainer(container.Image, container.Ports[0].IP, port)
+			killContainer(container.ID[:10])
+			createContainer(container.Image, container.Ports[0].IP, port)
 			log.Printf("Successfully added health checks to the following container: %s\n", container.Image)
 		}
 	}
@@ -60,7 +60,10 @@ func PerformHealthCheck(params []string) error {
 }
 
 // KillContainer kills all exisiting container to later add the health checks
-func KillContainer(containerID string) error {
+func killContainer(containerID string) error {
+	if len(containerID) == 0 {
+		return errors.New("Invalid Arguments specified")
+	}
 	cli, err := client.NewClientWithOpts(client.FromEnv, client.WithAPIVersionNegotiation())
 	if err != nil {
 		return err
@@ -73,7 +76,10 @@ func KillContainer(containerID string) error {
 }
 
 // CreateContainer recreates a container with a health check added to it
-func CreateContainer(containerImage string, hostIP string, port string) error {
+func createContainer(containerImage string, hostIP string, port string) error {
+	if len(containerImage) == 0 || len(hostIP) == 0 || len(port) == 0 {
+		return errors.New("Invalid Arguments")
+	}
 	cli, err := client.NewClientWithOpts(client.FromEnv, client.WithAPIVersionNegotiation())
 	if err != nil {
 		return err

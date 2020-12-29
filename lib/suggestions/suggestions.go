@@ -13,7 +13,7 @@ import (
 
 // ReadImage reads a docker file and suggests improvements that can be made
 func ReadImage(imagePath string) error {
-	if len(imagePath) < 10 {
+	if len(imagePath) < 10  {
 		return errors.New("File is not a dockerfile")
 	}
 	// grab the last 10 characters of the filename
@@ -58,6 +58,9 @@ func ReadImage(imagePath string) error {
 }
 
 func createMessages(err bool, data *DockerVars, e *ErrorMessages) error {
+	if data == nil || e == nil {
+		return errors.New("Invalid arguments")
+	}
 	if err {
 		if data.userCount == 0 {
 			e.userMsg = "No user specified in Dockerfile, this is a security risk for your container, consider adding one"
@@ -74,6 +77,9 @@ func createMessages(err bool, data *DockerVars, e *ErrorMessages) error {
 }
 
 func displayMessages(e *ErrorMessages) {
+	if e == nil {
+		return
+	}
 	fmt.Println("<---- Detected the following issues with your Dockerfile ---->")
 	i := 0
 	if len(e.userMsg) != 0 {
@@ -91,6 +97,9 @@ func displayMessages(e *ErrorMessages) {
 }
 
 func suggestImprovements(text string, data *DockerVars, lineNumber int) {
+	if len(text) == 0 || data == nil || lineNumber < 0 {
+		return
+	}
 	var fromCount int
 	words := strings.Fields(text)
 	for _, word := range words {
