@@ -12,9 +12,9 @@ import (
 )
 
 // ReadImage reads a docker file and suggests improvements that can be made
-func ReadImage(imagePath string) error {
+func ReadImage(imagePath string) (string, error) {
 	if len(imagePath) < 10  {
-		return errors.New("File is not a dockerfile")
+		return "", errors.New("File is not a dockerfile")
 	}
 	// grab the last 10 characters of the filename
 	image := imagePath[(len(imagePath) - 10):]
@@ -26,14 +26,14 @@ func ReadImage(imagePath string) error {
 	// check if the file is a Dockerfile
 	image = strings.ToLower(image)
 	if strings.Compare(image, "dockerfile") != 0 {
-		return errors.New("File given was not a dockerfile")
+		return "", errors.New("File given was not a dockerfile")
 	}
 	file, err := os.Open(imagePath)
 	if err != nil {
-		return err
+		return "", err
 	}
 	defer file.Close()
-
+  successMsg := ""
 	var data DockerVars
 	var e ErrorMessages
 	lineNumber := 0
@@ -49,12 +49,12 @@ func ReadImage(imagePath string) error {
 		createMessages(true, &data, &e)
 		displayMessages(&e)
 	} else {
-		fmt.Println("Detected no issues with Docker container")
+    successMsg += "Detected no issues with Docker container"
 	}
 	if err := scanner.Err(); err != nil {
-		return err
+		return "", err
 	}
-	return nil
+	return successMsg, nil
 }
 
 func createMessages(err bool, data *DockerVars, e *ErrorMessages) error {

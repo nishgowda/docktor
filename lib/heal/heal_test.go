@@ -6,7 +6,7 @@ import (
 
 func TestHeal(t *testing.T) {
 	containers := GetUnheatlhyContainers()
-	err := ContainerHeal(containers)
+	_, err := ContainerHeal(containers)
 	if err != nil {
 		t.Errorf("Error in healing container %s", err)
 	} else {

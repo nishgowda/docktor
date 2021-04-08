@@ -5,26 +5,27 @@ package healthcheck
 import (
 	"context"
 	"errors"
+	"log"
+	"strconv"
+
 	"github.com/docker/docker/api/types"
 	"github.com/docker/docker/api/types/container"
 	"github.com/docker/docker/api/types/filters"
 	"github.com/docker/docker/client"
 	"github.com/docker/go-connections/nat"
-	"log"
-	"strconv"
 )
 
 var ctx = context.Background()
 
 // PerformHealthCheck adds health checks to running containers
-func PerformHealthCheck(params []string) error {
+func PerformHealthCheck(params []string) (string, error) {
 	cli, err := client.NewClientWithOpts(client.FromEnv, client.WithAPIVersionNegotiation())
 	if err != nil {
 		panic(err)
 	}
 	var filter filters.Args
 	var containers []types.Container
-
+	msg := ""
 	// checks two cases -- passed in container ids or none
 	if len(params) > 1 {
 		// given the parameter
@@ -33,7 +34,7 @@ func PerformHealthCheck(params []string) error {
 		filter.Add("ID", params[0])
 		containers, err = cli.ContainerList(ctx, types.ContainerListOptions{Filters: filter})
 		if err != nil {
-			return err
+			return msg, err
 		}
 		for _, container := range containers {
 			port := strconv.FormatUint(uint64(container.Ports[1].PublicPort), 10)
@@ -44,19 +45,19 @@ func PerformHealthCheck(params []string) error {
 		// find the containers running through Docker API
 		containers, err = cli.ContainerList(ctx, types.ContainerListOptions{})
 		if err != nil {
-			return err
+			return msg, err
 		}
 		if len(containers) < 1 {
-			return errors.New("No running container detected")
+			return msg, errors.New("No running container detected")
 		}
 		for _, container := range containers {
 			port := strconv.FormatUint(uint64(container.Ports[0].PublicPort), 10)
 			killContainer(container.ID[:10])
 			createContainer(container.Image, container.Ports[0].IP, port)
-			log.Printf("Successfully added health checks to the following container: %s\n", container.Image)
+			msg += "Successfully added health checks to the following container: " + container.Image
 		}
 	}
-	return nil
+	return msg, nil
 }
 
 // KillContainer kills all exisiting container to later add the health checks

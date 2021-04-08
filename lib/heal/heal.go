@@ -40,18 +40,19 @@ func GetUnheatlhyContainers(params ...string) []string {
 
 // ContainerHeal heals unhealthy containers by restarting them given splice of
 // container ids grom GetUnheatlhyContainers or from given ids passed in flag
-func ContainerHeal(containerIds []string) error {
-	if len(containerIds) < 2 {
+func ContainerHeal(containerIds []string) (string, error) {
+  msg := ""
+  if len(containerIds) < 2 {
 		for _, id := range GetUnheatlhyContainers() {
 			containerIds = append(containerIds, id)
 		}
 	}
 	if len(containerIds) == 0 {
-		return errors.New("No containers were running")
+		return msg, errors.New("No containers were running")
 	}
 	cli, err := client.NewClientWithOpts(client.FromEnv, client.WithAPIVersionNegotiation())
 	if err != nil {
-		return err
+		return msg, err
 	}
 	var timeout *time.Duration
 	for _, id := range containerIds {
@@ -60,10 +61,10 @@ func ContainerHeal(containerIds []string) error {
 			timeout = &timeoutValue
 			e := cli.ContainerRestart(ctx, id, timeout)
 			if e != nil {
-				return e
+				return msg, e
 			}
-			log.Printf("Restarted container: %s\n", id)
+      msg += "Restarted container: " + id
 		}
 	}
-	return nil
+	return msg, nil
 }

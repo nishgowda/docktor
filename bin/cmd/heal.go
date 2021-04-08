@@ -14,9 +14,10 @@ var healCmd = &cobra.Command{
 	Use:   "heal",
 	Short: "Heal unhealthy containers",
 	Run: func(cmd *cobra.Command, args []string) {
-		err := heal.ContainerHeal(containers)
+		msg, err := heal.ContainerHeal(containers)
 		if err != nil {
 			log.Fatal(err)
 		}
+    log.Println(msg)
 	},
 }

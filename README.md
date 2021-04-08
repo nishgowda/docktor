@@ -29,18 +29,53 @@ However you can also install binary from this git repo
 ```
 go get github.com/nishgowda/docktor/bin/docktor
 ```
-## Running docktor
-Currently there exists 5 commands that execute each of docktor's features. 
 
-| Command | Flags |
-|---------| ------|
-| healthcheck | --c (specify container id)|
-|heal | --c (specify contianer id) |
-|autoheal | --c (specify contianer id) |
-|scan | --i (docker image) , --f (file to write report to)|
-|suggest | --f (docker file) | 
+## Command Line
+### Usage
+```
+# first have a container running already
 
+# run healthcheck on all containers
+./bin/./docktor healtheck --c <container id>
+
+# heal an unhealthy conainer
+./bin/./docktor heal --c <container id>
+
+# apply autoheal to containers
+./bin/./doctkor autoheal --c <container id>
+
+# scan for vulnerabilites
+./bin/./doctkor scan --i <image id> --f <report path>
+
+# suggest improvemets for dockerfile
+./bin/./docktor suggest --f <file path>
+
+
+## How you enter the binaries will depend on your os
+```
 **Note:** You can also use the --help command for any clarifications about the commands
+
+## API
+You can also start the server and make requests to perform docktor functions.
+ - GET /hcheck?container=
+ - GET /heal?container= 
+ - GET /aheal?container=
+- GET /scan?image=
+- GET /suggest?file=
+
+Usage
+```
+# If you dont specify the container it will perform functions on all running containers
+
+curl --request GET 'http://localhost:3001/hcheck'
+curl --request GET 'http://localhost:3001/heal'
+curl --request GET 'http://localhost:3001/aheal'
+curl --request GET 'http://localhost:3001/hcheck'
+
+# must specify the docker image and file respectively 
+curl --request GET 'http://localhost:3001/scan?image=nginx'
+curl --request GET 'http://localhost:3001/suggest?file=Dockerfile
+```
 
 ## Contributing
 Any contributions are welcome, just clone this repo and submit a PR to this branch.
