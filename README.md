@@ -7,19 +7,15 @@
 docktor is a security tool for docker containers that allow you to implement efficient and reliable healthchecks to them.
 
 Some highlights of docktor:
- - Creates automatic healthchecks to running docker containers
- - Implements automated healing for any unhealthy docker containers running
+ - Creates automatic healthchecks for running containers
+ - Implements automated healing for unhealthy running containers 
  - Adds manual healing as well
- - Suggests security to improvements in a given Dockerfile
+ - Suggests security improvements in a given Dockerfile
  - Scans Docker images for vulnerabilites and generate reports to files
 
-## Installation
-If you would like to run the project locally use the following command
-```
-go get github.com/nishgowda/docktor
-```
-
 ## Building docktor
+If you would like to run the project locally clone the repo. 
+
 After installation building the docktor binary can be done with the following command (this will create the binary in the existing bin folder)
 ``` 
 make build
@@ -31,10 +27,9 @@ go get github.com/nishgowda/docktor/bin/docktor
 ```
 
 ## Command Line
+You can run the features of docktor in the command line by running the executable
 ### Usage
 ```
-# first have a container running already
-
 # run healthcheck on all containers
 ./bin/./docktor healtheck --c <container id>
 
@@ -49,9 +44,6 @@ go get github.com/nishgowda/docktor/bin/docktor
 
 # suggest improvemets for dockerfile
 ./bin/./docktor suggest --f <file path>
-
-
-## How you enter the binaries will depend on your os
 ```
 **Note:** You can also use the --help command for any clarifications about the commands
 
@@ -63,8 +55,11 @@ You can also start the server and make requests to perform docktor functions.
 - GET /scan?image=
 - GET /suggest?file=
 
-Usage
+### Usage
 ```
+# start the server default port is 3001
+./bin./docktor server --p <port number>
+
 # If you dont specify the container it will perform functions on all running containers
 
 curl --request GET 'http://localhost:3001/hcheck'
