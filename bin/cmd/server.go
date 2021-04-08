@@ -13,7 +13,7 @@ func init() {
 
 var serverCmd = &cobra.Command {
 	Use: "server",
-	Short: "Start sever",
+	Short: "Start docktor sever",
 	Run: func(cmd *cobra.Command, args[] string) {
 		log.Println("Running on localhost:" + port)
 		server.Start(port)
