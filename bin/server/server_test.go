@@ -105,11 +105,11 @@ func TestSuggest(t *testing.T) {
   if status != http.StatusOK {
     t.Errorf("Handler returned wrong status code: got %v want %v", status, http.StatusOK)
   }
-  expected, err := json.Marshal("Detected no issues")
+  expected, err := json.Marshal("Detected no issues with Docker containre")
   if err != nil {
     t.Fatal(err)
   }
-  if strings.Contains(string(expected), rr.Body.String()) {
+  if strings.Contains(string(expected), rr.Body.String()) || strings.Compare(string(expected), rr.Body.String()) == 0 {
     t.Errorf("Handler returned unexpected body: got %v want %v", rr.Body.String(), string(expected))
   }
 }

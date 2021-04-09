@@ -16,7 +16,7 @@ Some highlights of docktor:
 ## Building docktor
 If you would like to run the project locally clone the repo. 
 
-After installation building the docktor binary can be done with the following command (this will create the binary in the existing bin folder)
+After installation, building the docktor binary can be done with the following command (this will create the binary in the existing bin folder)
 ``` 
 make build
 ```
@@ -58,7 +58,7 @@ You can also start the server and make requests to perform docktor functions.
 ### Usage
 ```
 # start the server default port is 3001
-./bin./docktor server --p 3001
+./docktor server --p 3001
 
 # If you dont specify the container it will perform functions on all running containers
 curl --request GET 'http://localhost:3001/hcheck?containers=nginx'
