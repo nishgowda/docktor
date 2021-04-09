@@ -4,7 +4,7 @@
 [![Go Report Card](https://goreportcard.com/badge/github.com/nishgowda/docktor)](https://goreportcard.com/report/github.com/nishgowda/docktor)
 [![codecov](https://codecov.io/gh/nishgowda/docktor/branch/master/graph/badge.svg?token=G4GHPU44W9)](https://codecov.io/gh/nishgowda/docktor)
 
-docktor is a security tool for docker containers that allow you to implement efficient and reliable healthchecks to them.
+docktor is a security tool that allows you to secure and implement reliable healthchecks on running Docker containers.
 
 Some highlights of docktor:
  - Creates automatic healthchecks for running containers
@@ -30,20 +30,20 @@ go get github.com/nishgowda/docktor/bin/docktor
 You can run the features of docktor in the command line by running the executable
 ### Usage
 ```
-# run healthcheck on all containers
-./bin/./docktor healtheck --c <container id>
+# run healthcheck on nginx container
+./docktor healtheck --c nginx
 
-# heal an unhealthy conainer
-./bin/./docktor heal --c <container id>
+# heal an unhealthy container named ng
+./docktor heal --c ng
 
-# apply autoheal to containers
-./bin/./doctkor autoheal --c <container id>
+# apply autoheal to container ng
+./doctkor autoheal --c ng
 
-# scan for vulnerabilites
-./bin/./doctkor scan --i <image id> --f <report path>
+# scan for vulnerabilites in nginx container and write output to file location
+./doctkor scan --i nginx --f data/ouptut.txt
 
 # suggest improvemets for dockerfile
-./bin/./docktor suggest --f <file path>
+./docktor suggest --f Dockerfile
 ```
 **Note:** You can also use the --help command for any clarifications about the commands
 
@@ -58,19 +58,21 @@ You can also start the server and make requests to perform docktor functions.
 ### Usage
 ```
 # start the server default port is 3001
-./bin./docktor server --p <port number>
+./bin./docktor server --p 3001
 
 # If you dont specify the container it will perform functions on all running containers
+curl --request GET 'http://localhost:3001/hcheck?containers=nginx'
 
-curl --request GET 'http://localhost:3001/hcheck'
-curl --request GET 'http://localhost:3001/heal'
-curl --request GET 'http://localhost:3001/aheal'
-curl --request GET 'http://localhost:3001/hcheck'
+curl --request GET 'http://localhost:3001/heal?containers=ngninx'
 
-# must specify the docker image and file respectively 
+curl --request GET 'http://localhost:3001/aheal?containers=ng'
+
+# must specify the docker image 
 curl --request GET 'http://localhost:3001/scan?image=nginx'
+
+# must specify the location of the docker file 
 curl --request GET 'http://localhost:3001/suggest?file=Dockerfile
 ```
 
 ## Contributing
-Any contributions are welcome, just clone this repo and submit a PR to this branch.
+Any contributions are welcome, you're welcome to add an issue or just clone this repo and submit a PR to this branch.
