@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+
 	"github.com/nishgowda/docktor/lib/autoheal"
 	"github.com/nishgowda/docktor/lib/heal"
 	"github.com/nishgowda/docktor/lib/healthcheck"
@@ -77,6 +78,7 @@ func hsuggest(w http.ResponseWriter, req *http.Request) {
 	w.Write(data)
 }
 
+// Start the http server given a port
 func Start(port string) {
 	http.HandleFunc("/aheal", aheal)
 	http.HandleFunc("/hcheck", hcheck)

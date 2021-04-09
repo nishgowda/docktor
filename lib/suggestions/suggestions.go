@@ -33,7 +33,6 @@ func ReadImage(imagePath string) (string, error) {
 		return "", err
 	}
 	defer file.Close()
-  successMsg := ""
 	var data DockerVars
 	var e ErrorMessages
 	lineNumber := 0
@@ -48,13 +47,11 @@ func ReadImage(imagePath string) (string, error) {
 	if data.userCount == 0 || data.environCount == 0 || data.workDirCount == 0 {
 		createMessages(true, &data, &e)
 		displayMessages(&e)
-	} else {
-    successMsg += "Detected no issues with Docker container"
 	}
 	if err := scanner.Err(); err != nil {
 		return "", err
 	}
-	return successMsg, nil
+	return "Detected no issues with Docker container",  nil
 }
 
 func createMessages(err bool, data *DockerVars, e *ErrorMessages) error {

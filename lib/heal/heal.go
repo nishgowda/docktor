@@ -5,11 +5,12 @@ package heal
 import (
 	"context"
 	"errors"
-	"github.com/docker/docker/api/types"
-	"github.com/docker/docker/client"
 	"log"
 	"os"
 	"time"
+
+	"github.com/docker/docker/api/types"
+	"github.com/docker/docker/client"
 )
 
 var ctx = context.Background()
@@ -63,7 +64,7 @@ func ContainerHeal(containerIds []string) (string, error) {
 			if e != nil {
 				return msg, e
 			}
-      msg += "Restarted container: " + id
+      	msg += "Restarted container: " + id
 		}
 	}
 	return msg, nil

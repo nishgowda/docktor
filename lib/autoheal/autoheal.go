@@ -13,12 +13,13 @@ func AutoHeal(params []string) (string, error) {
 	arg0 := "update"
 	arg1 := "--restart"
 	arg2 := "unless-stopped"
+	arg3 := "ng"
 	msg := ""
 	if len(params) < 1 {
 		return msg, errors.New("No container specified")
 	}
 	for _, id := range params {
-		cmd := exec.Command(app, arg0, arg1, arg2, id)
+		cmd := exec.Command(app, arg0, arg1, arg2, id, arg3)
 		err := cmd.Run()
 		if err != nil {
 			return msg, err
