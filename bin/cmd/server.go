@@ -11,10 +11,10 @@ func init() {
 	rootCmd.AddCommand(serverCmd)
 }
 
-var serverCmd = &cobra.Command {
-	Use: "server",
+var serverCmd = &cobra.Command{
+	Use:   "server",
 	Short: "Start docktor sever",
-	Run: func(cmd *cobra.Command, args[] string) {
+	Run: func(cmd *cobra.Command, args []string) {
 		log.Println("Running on localhost:" + port)
 		server.Start(port)
 	},

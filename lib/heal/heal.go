@@ -42,8 +42,8 @@ func GetUnheatlhyContainers(params ...string) []string {
 // ContainerHeal heals unhealthy containers by restarting them given splice of
 // container ids grom GetUnheatlhyContainers or from given ids passed in flag
 func ContainerHeal(containerIds []string) (string, error) {
-  msg := ""
-  if len(containerIds) < 2 {
+	msg := ""
+	if len(containerIds) < 2 {
 		for _, id := range GetUnheatlhyContainers() {
 			containerIds = append(containerIds, id)
 		}
@@ -64,7 +64,7 @@ func ContainerHeal(containerIds []string) (string, error) {
 			if e != nil {
 				return msg, e
 			}
-      	msg += "Restarted container: " + id
+			msg += "Restarted container: " + id
 		}
 	}
 	return msg, nil

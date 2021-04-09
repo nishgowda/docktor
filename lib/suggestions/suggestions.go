@@ -13,7 +13,7 @@ import (
 
 // ReadImage reads a docker file and suggests improvements that can be made
 func ReadImage(imagePath string) (string, error) {
-	if len(imagePath) < 10  {
+	if len(imagePath) < 10 {
 		return "", errors.New("File is not a dockerfile")
 	}
 	// grab the last 10 characters of the filename
@@ -51,7 +51,7 @@ func ReadImage(imagePath string) (string, error) {
 	if err := scanner.Err(); err != nil {
 		return "", err
 	}
-	return "Detected no issues with Docker container",  nil
+	return "Detected no issues with Docker container", nil
 }
 
 func createMessages(err bool, data *DockerVars, e *ErrorMessages) error {

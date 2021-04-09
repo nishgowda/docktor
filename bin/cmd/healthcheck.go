@@ -18,6 +18,6 @@ var healthCheckCmd = &cobra.Command{
 		if err != nil {
 			log.Fatal(err)
 		}
-    log.Println(msg)
+		log.Println(msg)
 	},
 }

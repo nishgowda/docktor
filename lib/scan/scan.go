@@ -39,6 +39,6 @@ func WriteFile(text string, filename string) (string, error) {
 	w := bufio.NewWriter(f)
 	fmt.Fprintf(w, text)
 	w.Flush()
-  	msg := "Successfully wrote vulnerability report to " +  filename
+	msg := "Successfully wrote vulnerability report to " + filename
 	return msg, nil
 }

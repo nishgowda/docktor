@@ -21,12 +21,12 @@ var ctx = context.Background()
 func PerformHealthCheck(params []string) (string, error) {
 	cli, err := client.NewClientWithOpts(client.FromEnv, client.WithAPIVersionNegotiation())
 	if err != nil {
-    return "", err
-  }
+		return "", err
+	}
 	var filter filters.Args
 	var containers []types.Container
 	msg := ""
-  // checks two cases: passed in container ids or none
+	// checks two cases: passed in container ids or none
 	if len(params) > 1 {
 		// specified container given in the parameter
 		filter = filters.NewArgs()
@@ -42,7 +42,7 @@ func PerformHealthCheck(params []string) (string, error) {
 			createContainer(container.Image, container.Ports[1].IP, port)
 		}
 	} else {
-    // no containers specified so find the containers running through Docker API
+		// no containers specified so find the containers running through Docker API
 		containers, err = cli.ContainerList(ctx, types.ContainerListOptions{})
 		if err != nil {
 			return "", err

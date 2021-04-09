@@ -14,7 +14,7 @@ var (
 	containers  []string
 	image       string
 	file        string
-	port 		string
+	port        string
 	rootCmd     = &cobra.Command{
 		Use:   "docktor",
 		Short: "A doctor for Docker containers",
@@ -44,7 +44,7 @@ func init() {
 	suggestCmd.Flags().StringVar(&file, "f", "", "Specify a Docker file")
 	scanCmd.Flags().StringVar(&image, "i", "", "Specify docker image")
 	scanCmd.Flags().StringVar(&file, "f", "", "Specify file to output vulnerability report")
-	serverCmd.Flags().StringVar(&port, "p","3001","Specify port number")
+	serverCmd.Flags().StringVar(&port, "p", "3001", "Specify port number")
 }
 
 func initConfig() {
