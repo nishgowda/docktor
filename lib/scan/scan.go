@@ -12,11 +12,13 @@ import (
 // Vulnerabilities scans images for vulnerabilities
 func Vulnerabilities(image string) (string, error) {
 	app := "docker"
-	arg := "scan"
+	arg1 := "scan"
+	arg2 := "--json"
+	arg3 := "--group-issues"
 	if len(image) < 1 {
 		return "", errors.New("No image specified")
 	}
-	cmd := exec.Command(app, arg, image)
+	cmd := exec.Command(app, arg1, arg2, arg3, image)
 	output, err := cmd.CombinedOutput()
 	if err != nil {
 		return string(output), nil
