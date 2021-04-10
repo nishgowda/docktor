@@ -30,19 +30,21 @@ func PerformHealthCheck(params []string) (string, error) {
 	if len(params) > 0 {
 		// specified container given in the parameter
 		filter = filters.NewArgs()
-		//filter.Add("ID", params[0])
 		containers, err = cli.ContainerList(ctx, types.ContainerListOptions{Filters: filter})
 		fmt.Println(containers)
 		if err != nil {
 			return "", err
 		}
 		for _, container := range containers {
-			port := strconv.FormatUint(uint64(container.Ports[0].PublicPort), 10)
-			killContainer(container.ID[:10])
-			createContainer(container.Image, container.Ports[0].IP, port)
-			msg += "Successfully added health checks to the following container: " + container.ID
+			// check if container is running on a port
+			if (len(container.Ports) > 0) {
+				port := strconv.FormatUint(uint64(container.Ports[0].PublicPort), 10)
+				killContainer(container.ID[:10])
+				createContainer(container.Image, container.Ports[0].IP, port)
+				msg += "Successfully added health checks to the following container: " + container.ID
+			}
 		}
-	} else { 
+	} else {
 		// no containers specified so find the containers running through Docker API
 		containers, err = cli.ContainerList(ctx, types.ContainerListOptions{})
 		if err != nil {
@@ -52,10 +54,13 @@ func PerformHealthCheck(params []string) (string, error) {
 			return "", errors.New("No running container detected")
 		}
 		for _, container := range containers {
-			port := strconv.FormatUint(uint64(container.Ports[0].PublicPort), 10)
-			killContainer(container.ID[:10])
-			createContainer(container.Image, container.Ports[0].IP, port)
-			msg += "Successfully added health checks to the following container: " + container.Image
+			// check if container is running on a port	
+			if (len(container.Ports) > 0) {
+				port := strconv.FormatUint(uint64(container.Ports[0].PublicPort), 10)
+				killContainer(container.ID[:10])
+				createContainer(container.Image, container.Ports[0].IP, port)
+				msg += "Successfully added health checks to the following container: " + container.Image
+			}
 		}
 	}
 	return msg, nil

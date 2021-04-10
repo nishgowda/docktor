@@ -3,9 +3,11 @@ GO_BIN_PATH=github.com/nishgowda/docktor/bin
 # tests and builds executable
 all: test-all build
 
+# runs fmt on all non fmt formatted go files
 # builds executable in bin directory
 build:
-	go build -o bin/docktor bin/main.go
+	- ./fmt.sh 
+	- go build -o bin/docktor bin/main.go
 
 # performs all tests on docktor library functions
 test-all: test_healthcheck test_healthcheck test_heal test_suggestions \
