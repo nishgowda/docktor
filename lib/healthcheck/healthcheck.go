@@ -5,7 +5,7 @@ package healthcheck
 import (
 	"context"
 	"errors"
-	"log"
+	"fmt"
 	"strconv"
 
 	"github.com/docker/docker/api/types"
@@ -27,21 +27,22 @@ func PerformHealthCheck(params []string) (string, error) {
 	var containers []types.Container
 	msg := ""
 	// checks two cases: passed in container ids or none
-	if len(params) > 1 {
+	if len(params) > 0 {
 		// specified container given in the parameter
 		filter = filters.NewArgs()
-		log.Println(params)
-		filter.Add("ID", params[0])
+		//filter.Add("ID", params[0])
 		containers, err = cli.ContainerList(ctx, types.ContainerListOptions{Filters: filter})
+		fmt.Println(containers)
 		if err != nil {
 			return "", err
 		}
 		for _, container := range containers {
-			port := strconv.FormatUint(uint64(container.Ports[1].PublicPort), 10)
+			port := strconv.FormatUint(uint64(container.Ports[0].PublicPort), 10)
 			killContainer(container.ID[:10])
-			createContainer(container.Image, container.Ports[1].IP, port)
+			createContainer(container.Image, container.Ports[0].IP, port)
+			msg += "Successfully added health checks to the following container: " + container.ID
 		}
-	} else {
+	} else { 
 		// no containers specified so find the containers running through Docker API
 		containers, err = cli.ContainerList(ctx, types.ContainerListOptions{})
 		if err != nil {

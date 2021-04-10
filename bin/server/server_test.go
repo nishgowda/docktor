@@ -20,11 +20,11 @@ func TestHcheck(t *testing.T) {
 	if status != http.StatusOK {
 		t.Errorf("Handler returned wrong status code: got %v want %v", status, http.StatusOK)
 	}
-	expected, err := json.Marshal("Successfully added health checks to the following container: nginx")
+	expected, err := json.Marshal("Successfully added health checks to the following container: ")
 	if err != nil {
 		t.Fatal(err)
 	}
-	if strings.Compare(string(expected), rr.Body.String()) == 0 {
+	if strings.Contains(string(expected), rr.Body.String()) {
 		t.Errorf("Handler returned unexpected body: got %v want %v", rr.Body.String(), string(expected))
 	}
 }
