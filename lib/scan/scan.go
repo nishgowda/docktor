@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"os"
 	"os/exec"
+	"strings"
 )
 
 // Vulnerabilities scans images for vulnerabilities
@@ -22,6 +23,9 @@ func Vulnerabilities(image string) (string, error) {
 	output, err := cmd.CombinedOutput()
 	if err != nil {
 		return string(output), nil
+	}
+	if strings.Compare(string(output), "Docker Scan relies upon access to Snyk, a third party provider, do you consent to proceed using Snyk? (y/N)") == 0 {
+		return "", errors.New("You need to enable Snyk to use this feature")
 	}
 	return string(output), nil
 }

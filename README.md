@@ -39,13 +39,13 @@ You can run the features of docktor in the command line by running the executabl
 # apply autoheal to container ng
 ./doctkor autoheal --c ng
 
-# scan for vulnerabilites in nginx container and write output to file location
+# scan for vulnerabilites in nginx container and write output to file location 
 ./doctkor scan --i nginx --f data/ouptut.txt
 
 # suggest improvemets for dockerfile
 ./docktor suggest --f Dockerfile
 ```
-**Note:** You can also use the --help command for any clarifications about the commands
+**NOTE:** You must enable [Snyk](https://snyk.io/blog/snyk-docker-secure-containerized-applications/) to use the scan feature.
 
 ## API
 You can also start the server and make requests to perform docktor functions.
