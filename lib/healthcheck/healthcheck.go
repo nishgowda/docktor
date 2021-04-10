@@ -5,7 +5,6 @@ package healthcheck
 import (
 	"context"
 	"errors"
-	"fmt"
 	"strconv"
 
 	"github.com/docker/docker/api/types"
@@ -31,7 +30,6 @@ func PerformHealthCheck(params []string) (string, error) {
 		// specified container given in the parameter
 		filter = filters.NewArgs()
 		containers, err = cli.ContainerList(ctx, types.ContainerListOptions{Filters: filter})
-		fmt.Println(containers)
 		if err != nil {
 			return "", err
 		}

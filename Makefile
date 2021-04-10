@@ -10,7 +10,7 @@ build:
 	- go build -o bin/docktor bin/main.go
 
 # performs all tests on docktor library functions
-test-all: test_healthcheck test_healthcheck test_heal test_suggestions \
+test-all: test_healthcheck test_autoheal test_heal test_suggestions \
 			test_scan test-server
 test-server:
 	- go test $(GO_BIN_PATH)/server
