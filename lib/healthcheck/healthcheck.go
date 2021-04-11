@@ -35,7 +35,7 @@ func PerformHealthCheck(params []string) (string, error) {
 		}
 		for _, container := range containers {
 			// check if container is running on a port
-			if (len(container.Ports) > 0) {
+			if len(container.Ports) > 0 {
 				port := strconv.FormatUint(uint64(container.Ports[0].PublicPort), 10)
 				killContainer(container.ID[:10])
 				createContainer(container.Image, container.Ports[0].IP, port)
@@ -52,8 +52,8 @@ func PerformHealthCheck(params []string) (string, error) {
 			return "", errors.New("No running container detected")
 		}
 		for _, container := range containers {
-			// check if container is running on a port	
-			if (len(container.Ports) > 0) {
+			// check if container is running on a port
+			if len(container.Ports) > 0 {
 				port := strconv.FormatUint(uint64(container.Ports[0].PublicPort), 10)
 				killContainer(container.ID[:10])
 				createContainer(container.Image, container.Ports[0].IP, port)
