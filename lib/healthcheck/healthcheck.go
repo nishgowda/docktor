@@ -26,7 +26,7 @@ func PerformHealthCheck(params []string) (string, error) {
 	var containers []types.Container
 	msg := ""
 	// checks two cases: passed in container ids or none
-	if len(params) > 0 {
+	if len(params[0]) > 0 {
 		// specified container given in the parameter
 		filter = filters.NewArgs()
 		containers, err = cli.ContainerList(ctx, types.ContainerListOptions{Filters: filter})
@@ -40,25 +40,29 @@ func PerformHealthCheck(params []string) (string, error) {
 				killContainer(container.ID[:10])
 				createContainer(container.Image, container.Ports[0].IP, port)
 				msg += "Successfully added health checks to the following container: " + container.ID
+			} else {
+				msg += "The following container did not have a published port" + container.ID
 			}
 		}
-	} else {
-		// no containers specified so find the containers running through Docker API
-		containers, err = cli.ContainerList(ctx, types.ContainerListOptions{})
-		if err != nil {
-			return "", err
-		}
-		if len(containers) < 1 {
-			return "", errors.New("No running container detected")
-		}
-		for _, container := range containers {
-			// check if container is running on a port
-			if len(container.Ports) > 0 {
-				port := strconv.FormatUint(uint64(container.Ports[0].PublicPort), 10)
-				killContainer(container.ID[:10])
-				createContainer(container.Image, container.Ports[0].IP, port)
-				msg += "Successfully added health checks to the following container: " + container.Image
-			}
+		return msg, nil
+	}
+	// no containers specified so find the containers running through Docker API
+	containers, err = cli.ContainerList(ctx, types.ContainerListOptions{})
+	if err != nil {
+		return "", err
+	}
+	if len(containers) == 0 {
+		return "", errors.New("No running container detected")
+	}
+	for _, container := range containers {
+		// check if container is running on a port
+		if len(container.Ports) > 0 {
+			port := strconv.FormatUint(uint64(container.Ports[0].PublicPort), 10)
+			killContainer(container.ID[:10])
+			createContainer(container.Image, container.Ports[0].IP, port)
+			msg += "Successfully added health checks to the following container: " + container.Image
+		} else {
+			msg += "The following container did not have a published port" + container.ID
 		}
 	}
 	return msg, nil

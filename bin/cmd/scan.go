@@ -1,7 +1,6 @@
 package cmd
 
 import (
-	"fmt"
 	"log"
 
 	"github.com/nishgowda/docktor/lib/scan"
@@ -23,7 +22,7 @@ var scanCmd = &cobra.Command{
 		if len(file) > 1 {
 			scan.WriteFile(out, file)
 		} else {
-			fmt.Println("Success")
+			log.Println("Success")
 		}
 	},
 }

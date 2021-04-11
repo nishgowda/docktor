@@ -1,9 +1,10 @@
 package cmd
 
 import (
+	"log"
+
 	"github.com/nishgowda/docktor/lib/healthcheck"
 	"github.com/spf13/cobra"
-	"log"
 )
 
 func init() {
@@ -17,6 +18,9 @@ var healthCheckCmd = &cobra.Command{
 		msg, err := healthcheck.PerformHealthCheck(containers)
 		if err != nil {
 			log.Fatal(err)
+		}
+		if len(msg) < 1 {
+			log.Fatal("No running containers detected", err)
 		}
 		log.Println(msg)
 	},
