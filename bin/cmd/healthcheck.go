@@ -20,7 +20,7 @@ var healthCheckCmd = &cobra.Command{
 			log.Fatal(err)
 		}
 		if len(msg) < 1 {
-			log.Fatal("No running containers detected", err)
+			log.Fatal("No running containers detected")
 		}
 		log.Println(msg)
 	},

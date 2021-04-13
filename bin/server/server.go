@@ -14,8 +14,8 @@ import (
 )
 
 func hcheck(w http.ResponseWriter, req *http.Request) {
-	containers, _ := req.URL.Query()["containers"]
-	msg, err := healthcheck.PerformHealthCheck(containers)
+	container, _ := req.URL.Query()["container"]
+	msg, err := healthcheck.PerformHealthCheck(container)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -28,8 +28,8 @@ func hcheck(w http.ResponseWriter, req *http.Request) {
 }
 
 func aheal(w http.ResponseWriter, req *http.Request) {
-	containers, _ := req.URL.Query()["containers"]
-	msg, err := autoheal.AutoHeal(containers)
+	container, _ := req.URL.Query()["container"]
+	msg, err := autoheal.AutoHeal(container)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -42,8 +42,8 @@ func aheal(w http.ResponseWriter, req *http.Request) {
 }
 
 func hheal(w http.ResponseWriter, req *http.Request) {
-	containers, _ := req.URL.Query()["containers"]
-	msg, err := heal.ContainerHeal(containers)
+	container, _ := req.URL.Query()["container"]
+	msg, err := heal.ContainerHeal(container)
 	if err != nil {
 		log.Fatal(err)
 	}
