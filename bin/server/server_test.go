@@ -29,6 +29,7 @@ func TestHcheck(t *testing.T) {
 	}
 }
 
+// name the container ng when testing this
 func TestAheal(t *testing.T) {
 	req, err := http.NewRequest("GET", "/aheal?containers=ng", nil)
 	if err != nil {

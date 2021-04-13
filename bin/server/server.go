@@ -14,8 +14,9 @@ import (
 )
 
 func hcheck(w http.ResponseWriter, req *http.Request) {
-	container, _ := req.URL.Query()["container"]
-	msg, err := healthcheck.PerformHealthCheck(container)
+	containers := req.URL.Query().Get("containers")
+	c := []string{containers}
+	msg, err := healthcheck.PerformHealthCheck(c)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -28,8 +29,9 @@ func hcheck(w http.ResponseWriter, req *http.Request) {
 }
 
 func aheal(w http.ResponseWriter, req *http.Request) {
-	container, _ := req.URL.Query()["container"]
-	msg, err := autoheal.AutoHeal(container)
+	containers := req.URL.Query().Get("containers")
+	c := []string{containers}
+	msg, err := autoheal.AutoHeal(c)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -42,8 +44,9 @@ func aheal(w http.ResponseWriter, req *http.Request) {
 }
 
 func hheal(w http.ResponseWriter, req *http.Request) {
-	container, _ := req.URL.Query()["container"]
-	msg, err := heal.ContainerHeal(container)
+	containers := req.URL.Query().Get("containers")
+	c := []string{containers}
+	msg, err := heal.ContainerHeal(c)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -56,15 +59,21 @@ func hheal(w http.ResponseWriter, req *http.Request) {
 }
 
 func hscan(w http.ResponseWriter, req *http.Request) {
-	image, ok := req.URL.Query()["image"]
-	if !ok || len(image[0]) < 1 {
+	image := req.URL.Query().Get("image")
+	file := req.URL.Query().Get("file")
+	fmt.Println("PARAMS", image, file)
+	if len(image) < 1 {
 		fmt.Fprint(w, "No file specified")
 	}
-	msg, err := scan.Vulnerabilities(image[0])
+	out, err := scan.Vulnerabilities(image)
 	if err != nil {
 		log.Fatal(err)
 	}
-	data, err := json.Marshal(msg)
+	if len(file) > 1 {
+		scan.WriteFile(out, file)
+		out = "Succesfully wrote scan to " + file
+	}
+	data, err := json.Marshal(out)
 	w.Header().Set("Content-Type", "application/json")
 	w.Write(data)
 }
