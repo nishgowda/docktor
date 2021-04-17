@@ -23,7 +23,7 @@ class TestDocktor(unittest.TestCase):
             container = c.attrs['State']
             if 'Health' in container and container['Health']['Status'] != 'healthy':
                 res = subprocess.check_output('.././bin/./docktor heal ' + c.id, shell=True)
-                #print('RES', res)
+                self.assertEqual(res, "Restarted container: " + c.id)
             else:
                 print(c.name + ' is not unhealthy')
     
@@ -31,7 +31,6 @@ class TestDocktor(unittest.TestCase):
         containers = client.containers.list()
         for c in containers:
             os.system('.././bin/./docktor autoheal ' + c.name)
-            #res = subprocess.check_output('.././bin/./docktor autoheal ' + c.name, shell=True)
             print('autohealed ' + c.name)
 
     def test_scan(self):

@@ -14,6 +14,7 @@ func AutoHeal(params []string) (string, error) {
 	arg1 := "--restart"
 	arg2 := "unless-stopped"
 	msg := ""
+
 	if len(params) < 1 {
 		return msg, errors.New("No container specified")
 	}
