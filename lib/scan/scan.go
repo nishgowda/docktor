@@ -14,6 +14,7 @@ import (
 func Vulnerabilities(image string) (string, error) {
 	app := "docker"
 	arg1 := "scan"
+	// group issues in json format
 	arg2 := "--json"
 	arg3 := "--group-issues"
 	if len(image) < 1 {
@@ -24,6 +25,7 @@ func Vulnerabilities(image string) (string, error) {
 	if err != nil {
 		return string(output), nil
 	}
+	// checks if Snyk is enabeld
 	if strings.Compare(string(output), "Docker Scan relies upon access to Snyk, a third party provider, do you consent to proceed using Snyk? (y/N)") == 0 {
 		return "", errors.New("You need to enable Snyk to use this feature")
 	}

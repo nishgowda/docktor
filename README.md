@@ -49,10 +49,10 @@ You can run the features of docktor in the command line by running the executabl
 
 ## API
 You can also start the server and make requests to perform docktor functions.
- - GET /hcheck?container=
- - GET /heal?container= 
- - GET /aheal?container=
-- GET /scan?image=
+ - GET /hcheck?containers=
+ - GET /heal?containers= 
+ - GET /aheal?containers=
+- GET /scan?image=foo&file=bar
 - GET /suggest?file=
 
 ### Usage

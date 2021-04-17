@@ -68,7 +68,7 @@ func PerformHealthCheck(params []string) (string, error) {
 	return msg, nil
 }
 
-// KillContainer kills all exisiting container to later add the health checks
+// killContainer kills all exisiting container to later add the health checks
 func killContainer(containerID string) error {
 	if len(containerID) == 0 {
 		return errors.New("Invalid Arguments specified")
@@ -84,7 +84,7 @@ func killContainer(containerID string) error {
 	return nil
 }
 
-// CreateContainer recreates a container with a health check added to it
+// createContainer recreates a container with a health check added to it
 func createContainer(containerImage string, hostIP string, port string) error {
 	if len(containerImage) == 0 || len(hostIP) == 0 || len(port) == 0 {
 		return errors.New("Invalid Arguments")
